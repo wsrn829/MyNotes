@@ -1,0 +1,21 @@
+WebSockets
+
+1. The WebSocket functionality in Web browsers provides a mechanism for your Web application (or really, any application that speaks the WebSocket protocol) to create a persistent connection for two-way communication between the client and the server.
+
+2. Rather than the Web browser having to make a request for every single response, this persistent connection allows the back-end server to send data to the Web browser whenever it wants to. Also, the Web browser can send data to the backend whenever it wants to without needing a response.3.
+
+3. This solves a problem that many Web applications had before the introduction of the WebSocket standard, when clients wanted to have constant communication with the server, which breaks the request/response nature of HTTP.
+
+4. This is useful for applications that require real-time updates, such as chat applications, multiplayer games, and financial applications.
+
+5. The WebSocket protocol is a part of the HTML5 specification, and it is supported by all modern Web browsers.
+
+6. Before the ratification of the standard that defines the WebSocket protocol, RFC 6455  , Web applications used the Comet model  of Web application programming. During the adoption phase of WebSockets, server frameworks such as socket.io  and SignalR  used fallback techniques for those Web browsers that didn't have WebSockets built into them, yet. Some of those techniques are:
+
+   - Using a hidden IFRAME to make communication possible
+   - Using an embedded Adobe Flash movie to use its data streaming capabilities
+   - Using AJAX long-polling, which opened up an AJAX request that just waited for the server to send a message, and when it did, would immediately open another AJAX request
+
+   These workarounds were really hard to implement, so we relied on those libraries. But now all modern browsers have WebSockets in them, so we don't need to worry about the things in that list.
+
+7.

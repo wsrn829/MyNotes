@@ -190,49 +190,49 @@ Each reducer receives the action, looks at its properties, and makes a decision 
     },
     });
 
-  -  Using the state and actions
+  - Using the state and actions
 
-Now, in our component, we can get the data using the useSelector hook and send new data to the store using the useDispatch hook. Assuming this component is in the same directory as our articleSlice file, we would have this:
+    Now, in our component, we can get the data using the useSelector hook and send new data to the store using the useDispatch hook. Assuming this component is in the same directory as our articleSlice file, we would have this:
 
-import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
-import { addArticle } from './articleSlice';
+    import React, { useState } from 'react'
+    import { useSelector, useDispatch } from 'react-redux';
+    import { addArticle } from './articleSlice';
 
-export function ArticleList() {
-  const [title, setTitle] = useState('');
-  const [id, setId] = useState(null);
-  const articles = useSelector(state => state.articles);
-  const dispatch = useDispatch();
+    export function ArticleList() {
+    const [title, setTitle] = useState('');
+    const [id, setId] = useState(null);
+    const articles = useSelector(state => state.articles);
+    const dispatch = useDispatch();
 
-  function handleSubmit() {
-    const action = addArticle({ title: title, id: id });
-    dispatch(action);
-    setTitle('');
-    setId(null);
-  }
+    function handleSubmit() {
+        const action = addArticle({ title: title, id: id });
+        dispatch(action);
+        setTitle('');
+        setId(null);
+    }
 
-  return (
-    <>
-      <ul>
-        {articles.map(el => (
-          <li key={el.id}>
-            {el.title}
-          </li>
-        )}
-      </ul>
-      <input value={title}
-             onChange={e => setTitle(e.target.value)} />
-      <input type="number"
-             value={id}
-             onChange={e => setId(Number.parseInt(e.target.value))} />
-      <button onClick={handleSubmit}>
-        Add new article
-      </button>
-    </>
-  );
-}
+    return (
+        <>
+        <ul>
+            {articles.map(el => (
+            <li key={el.id}>
+                {el.title}
+            </li>
+            )}
+        </ul>
+        <input value={title}
+                onChange={e => setTitle(e.target.value)} />
+        <input type="number"
+                value={id}
+                onChange={e => setId(Number.parseInt(e.target.value))} />
+        <button onClick={handleSubmit}>
+            Add new article
+        </button>
+        </>
+    );
+    }
 
-Now, when you fill out the fields for the title and the id of the article, then click the button, it:
+    Now, when you fill out the fields for the title and the id of the article, then click the button, it:
 
     - Creates an action with the addArticle function
     - Dispatches the action
@@ -241,7 +241,7 @@ Now, when you fill out the fields for the title and the id of the article, then 
     - The new state of the articles is retrieved with the useSelector function
     - The entire list of articles, including the new one just created, is then rendered in the <ul> tags
 
--     Continued reading
+  - Continued reading
 
     We invite you to read the following articles from the Redux site that will add more information to what you've just read:
 
