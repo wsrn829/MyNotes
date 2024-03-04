@@ -1,0 +1,249 @@
+React Redux
+
+1. Having each component manage its own state can make for a difficult situation when you want to write a larger React front-end application.
+
+2. This is where the idea of a central state store can help us.
+
+3. We put all of our front-end state into a single JavaScript object, then use that object all across our front-end application.
+
+4. This means that our components will not usually manage their own state. That means no more this.state = {...} in class-based components, and no more useState(...) in our function-based components using React Hooks.
+
+5. Because we're sharing it across the entire front end, we have to follow certain rules about how we interact with it. We don't want two different components changing the values in the state object because they may overwrite each other's changes.
+
+6. Instead, we will use the useSelector and useDispatch hooks from the react-redux library to read from and write to our central state store.
+
+7. The useSelector hook is used to read from the central state store.
+
+8. The useDispatch hook is used to write to the central state store.
+
+9. The useSelector hook takes a function as an argument, and that function is used to select a piece of state from the central state store.
+
+10. The useDispatch hook returns a function that we can use to dispatch an action to the central state store.
+
+11. An action is a plain JavaScript object that describes a change to the state.
+
+12. An action has a type property that describes the type of change, and a payload property that describes the change itself.
+
+13. An action is dispatched to the central state store using the dispatch function returned by the useDispatch hook.
+
+14. The central state store is updated by a function called a reducer.
+
+15. A reducer is a function that takes the current state and an action, and returns the new state.
+
+16. The central state store is created using the createStore function from the redux library.
+
+17. The createStore function takes a reducer as an argument, and returns the central state store.
+
+18. The central state store is then passed to the Provider component from the react-redux library, which is then used to wrap the entire front-end application.
+
+19. The Provider component takes the central state store as a prop, and makes it available to all of the components in the front-end application.
+
+20. Redux to the rescue...maybe
+
+State is everywhere in our front-end application. Can you imagine how much state a Web application has?
+
+Even a seemingly simple single-page application could grow out of control without clear boundaries between every layer of the application. This holds particularly true in React.
+
+Normally, we try to get by with keeping the state in a top-level React component and pass pieces of it to child components. Things become tricky when you add more behavior to the front-end app, more buttons to click, more form fields to fill out. At some point you may want to reach for a consistent way to keep track of state changes.
+
+With increased complexity, we now have to manage three things:
+
+- The state of the overall application
+- The logic (functions) to change the state
+- The different actions a person can take to invoke the functions that change the state
+
+Redux can solve exactly those issues. It might not be clear in the beginning, but Redux helps by giving each front-end component the exact piece of state it needs.
+
+Redux can hold business logic inside itself. We can use "plug-ins" to allow us to fetch data in that business logic. There are a lot of benefits to this structure.
+
+21. The parts of Redux
+
+There are four parts to Redux:
+
+- The store is the single JavaScript object where the state for your front-end application is stored.
+- Actions are "commands" that we use to tell Redux that we want to change the data inside the store.
+- Reducers are functions that receive actions that do the actual changing of the data.
+- Middleware are other libraries that we can plug into Redux to do things like fetch data from APIs.
+
+To create a store, we have to have at least one reducer. This is because the reducer's job is to change the data in the store. So, the two go together, stores and reducers.
+
+We then dispatch actions to the store that hands it off to the reducer to change the state.
+
+Each reducer receives the action, looks at its properties, and makes a decision about how to change the data in the store.
+
+22.Implementing Redux in a React app
+  - Creating a data store
+
+    We normally start off by creating a file to contain the creation of the data store.
+
+    import { configureStore } from '@reduxjs/toolkit';
+
+    export const store = configureStore({
+    reducer: {},
+    });
+
+    We don't have a reducer function, yet, so we just give the reducer property an empty object.
+
+  - Adding the store to your React app
+
+    We use the Provider from the react-redux library to provide the state to the app. Normally, we do this in the index.js file.
+
+    // Other imports, here
+
+    // Import the store we just created
+    import { store } from './store';
+
+    // Import the Provider
+    import { Provider } from 'react-redux';
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(
+      <React.StrictMode>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </React.StrictMode>
+    );
+
+    That Provider provides the data in the store to any component that wants it in the React app.
+
+  - We use the Provider from the react-redux library to provide the state to the app. Normally, we do this in the index.js file.
+
+    // Other imports, here
+
+    // Import the store we just created
+    import { store } from './store';
+
+    // Import the Provider
+    import { Provider } from 'react-redux';
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(
+    <React.StrictMode>
+        <Provider store={store}>
+        <App />
+        </Provider>
+    </React.StrictMode>
+    );
+
+    That Provider provides the data in the store to any component that wants it in the React app.
+
+  - Creating a "state slice"
+
+    Using Redux Toolkit, we will define what they call a slice. A slice is just a portion of the overall application state. Like in your app that may have user preferences and lists of products, one slice would contain the user preferences data and another slice would contain the data about the products. Each slice is much like its own bounded context. (Remember those?)
+
+    Technically, a slice defines three things:
+
+    The initial state of the slice of data
+    The reducers for that slice, which define how to change the data in the data store
+    The actions for that slice, which are the "commands" for the reducers to do something
+    Here's what the code looks like:
+
+    import { createSlice } from '@reduxjs/toolkit'
+
+    // Define what the initial data should look like
+    // This is what was in the constructor of the stateful
+    // component above.
+    const initialState = {
+    articles: [
+        { title: "Writing stateful components", id: 1 },
+        { title: "Using Redux", id: 2 }
+    ],
+    };
+
+    // Create the "slice of data that is the articles data"
+    export const articleSlice = createSlice({
+    name: 'counter',
+    initialState, // Set the initial state
+    reducers: {
+        // Define the logic about how to add a new article
+        // to the list of articles in the state
+        addArticle: (state, action) => {
+        // The action's payload has the data that we want
+        // to add
+        const newArticle = action.payload;
+
+        // We use the push method to add the new article
+        // to the existing list of articles in the state
+        state.articles.push(newArticle);
+        },
+    },
+    });
+
+    // Export our actions for use in our components
+    export const { addArticle } = articleSlice.actions
+
+    // Export the reducer to use in the declaration of our
+    // store in store.js
+    export default articleSlice.reducer
+
+  - Adding the reducer to the store
+
+    Back where we created the store, we can now add the reducer that we exported on the last line of the code in the previous section. Assuming the last file was created in a directory named articles, we'd have this:
+
+    import { configureStore } from '@reduxjs/toolkit';
+    import articlesReducer from './articles/articlesSlice';
+
+    export const store = configureStore({
+    reducer: {
+        articles: articlesReducer,
+    },
+    });
+
+  -  Using the state and actions
+
+Now, in our component, we can get the data using the useSelector hook and send new data to the store using the useDispatch hook. Assuming this component is in the same directory as our articleSlice file, we would have this:
+
+import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+import { addArticle } from './articleSlice';
+
+export function ArticleList() {
+  const [title, setTitle] = useState('');
+  const [id, setId] = useState(null);
+  const articles = useSelector(state => state.articles);
+  const dispatch = useDispatch();
+
+  function handleSubmit() {
+    const action = addArticle({ title: title, id: id });
+    dispatch(action);
+    setTitle('');
+    setId(null);
+  }
+
+  return (
+    <>
+      <ul>
+        {articles.map(el => (
+          <li key={el.id}>
+            {el.title}
+          </li>
+        )}
+      </ul>
+      <input value={title}
+             onChange={e => setTitle(e.target.value)} />
+      <input type="number"
+             value={id}
+             onChange={e => setId(Number.parseInt(e.target.value))} />
+      <button onClick={handleSubmit}>
+        Add new article
+      </button>
+    </>
+  );
+}
+
+Now, when you fill out the fields for the title and the id of the article, then click the button, it:
+
+    - Creates an action with the addArticle function
+    - Dispatches the action
+    - The reducer in the store gets the action and adds the article to the list
+    - React notices that it needs to update your ArticleList
+    - The new state of the articles is retrieved with the useSelector function
+    - The entire list of articles, including the new one just created, is then rendered in the <ul> tags
+
+-     Continued reading
+
+    We invite you to read the following articles from the Redux site that will add more information to what you've just read:
+
+    Redux Fundamentals: Start with Redux Overview  and read through the end
+    Redux Toolkit: Read the Usage Guide  , which may seem pretty heavy at first. It will walk you through another example of how to create stores and slices and how to use them in your React application.
